@@ -4,7 +4,7 @@ import { HiHome } from 'react-icons/hi';
 import { FaUsers, FaCalendarAlt, FaTasks, FaChartBar } from 'react-icons/fa';
 import { IoLogOutOutline } from 'react-icons/io5';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
 
   const navigationItems = [
@@ -15,8 +15,19 @@ const Sidebar = () => {
     { name: 'Reports', icon: FaChartBar, path: '', active: location.pathname === '/reports' },
   ];
 
+  const handleLinkClick = () => {
+    // Close sidebar on mobile when a link is clicked
+    if (onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="w-[250px] bg-white flex flex-col h-screen border-r border-gray-200">
+    <div className={`
+      w-[250px] bg-white flex flex-col h-screen border-r border-gray-200
+      fixed lg:static z-40 transition-transform duration-300 ease-in-out
+      ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    `}>
       {/* Logo Section */}
       <div className="p-6">
         <div className="flex items-center space-x-3">
@@ -36,6 +47,7 @@ const Sidebar = () => {
               <li key={item.name}>
                 <Link
                   to={item.path}
+                  onClick={handleLinkClick}
                   className={`flex items-center px-4 py-3 rounded-lg transition-all ${
                     item.active
                       ? 'bg-teal-50 text-teal-700'

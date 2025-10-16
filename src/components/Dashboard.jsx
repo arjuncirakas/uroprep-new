@@ -58,15 +58,15 @@ const Dashboard = () => {
   return (
     <div className="h-full overflow-y-auto">
       {/* Main Content Area */}
-      <div className="p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         {/* Header */}
-        <div className="mb-8 flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <div className="mb-6 lg:mb-8 flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+          <div className="pl-12 lg:pl-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="text-gray-500 text-sm mt-1">Welcome, Dr. Thompson</p>
           </div>
           {/* Search Bar */}
-          <div className="w-96">
+          <div className="w-full lg:w-96">
             <div className="relative">
               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -79,29 +79,29 @@ const Dashboard = () => {
         </div>
 
         {/* Main Layout Grid */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
           {/* Left Column - Takes 2/3 width */}
-          <div className="col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 lg:space-y-6">
             {/* Today's Appointments */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Today's Appointments</h2>
+              <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Today's Appointments</h2>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[640px]">
                   <thead>
                     <tr className="border-b border-gray-200 bg-gray-50">
-                      <th className="text-left py-3 px-6 font-medium text-gray-600 text-sm">Time</th>
-                      <th className="text-left py-3 px-6 font-medium text-gray-600 text-sm">Patient Name</th>
-                      <th className="text-left py-3 px-6 font-medium text-gray-600 text-sm">Age</th>
-                      <th className="text-left py-3 px-6 font-medium text-gray-600 text-sm">Pathway Status</th>
+                      <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Time</th>
+                      <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Patient Name</th>
+                      <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Age</th>
+                      <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Pathway Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {appointments.map((appointment, index) => (
                       <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="py-4 px-6 text-gray-700 text-sm">{appointment.time}</td>
-                        <td className="py-4 px-6 text-gray-900 text-sm font-medium">
+                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{appointment.time}</td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-900 text-xs sm:text-sm font-medium">
                           <div className="flex items-center space-x-2">
                             <span>{appointment.patient}</span>
                             {appointment.tag && (
@@ -111,8 +111,8 @@ const Dashboard = () => {
                             )}
                           </div>
                         </td>
-                        <td className="py-4 px-6 text-gray-700 text-sm">{appointment.age}</td>
-                        <td className="py-4 px-6">
+                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{appointment.age}</td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-6">
                           {getStatusBadge(appointment.status, appointment.statusColor)}
                         </td>
                       </tr>
@@ -123,11 +123,11 @@ const Dashboard = () => {
             </div>
 
             {/* Patients Due for Review and Recent MDT Outcomes Side by Side */}
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
               {/* Patients Due for Review */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">Patients Due for Review</h2>
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Patients Due for Review</h2>
                 </div>
                 <div className="p-4">
                   <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
@@ -155,8 +155,8 @@ const Dashboard = () => {
 
               {/* Recent MDT Outcomes */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">Recent MDT Outcomes</h2>
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Recent MDT Outcomes</h2>
                 </div>
                 <div className="p-4 space-y-2">
                   {mdtOutcomes.map((outcome, index) => (
@@ -177,18 +177,18 @@ const Dashboard = () => {
           </div>
 
           {/* Right Column - Takes 1/3 width */}
-          <div className="col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-4 lg:space-y-6">
             {/* Pending Tasks */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-gray-900">Pending Tasks</h2>
-                  <button className="bg-teal-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors flex items-center">
-                    <span className="mr-1">+</span> New Task
+              <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Pending Tasks</h2>
+                  <button className="bg-teal-600 text-white px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-teal-700 transition-colors flex items-center whitespace-nowrap">
+                    <span className="mr-1">+</span> <span className="hidden sm:inline">New Task</span><span className="sm:hidden">New</span>
                   </button>
                 </div>
               </div>
-              <div className="p-6 space-y-3">
+              <div className="p-4 sm:p-6 space-y-3">
                 {tasks.map((task) => (
                   <div key={task.id} className="flex items-start space-x-3">
                     <button
@@ -214,10 +214,10 @@ const Dashboard = () => {
 
             {/* MDT Schedule */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">MDT Schedule</h2>
+              <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900">MDT Schedule</h2>
               </div>
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 {/* Next MDT Discussion Card */}
                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4">
                   <h3 className="font-semibold text-gray-900 text-sm mb-2">Next MDT Discussion</h3>
