@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import UrologistSidebar from '../components/layout/UrologistSidebar';
 import { HiMenu, HiX } from 'react-icons/hi';
 
-const Layout = () => {
+const UrologistLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -28,13 +28,14 @@ const Layout = () => {
         />
       )}
 
-      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      <UrologistSidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
       
-      <main className="flex-1 flex flex-col w-full lg:w-auto">
+      <main className="flex-1 flex flex-col w-full lg:w-auto overflow-hidden">
         <Outlet />
       </main>
     </div>
   );
 };
 
-export default Layout;
+export default UrologistLayout;
+

@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { MdCheckBoxOutlineBlank, MdCheckBox } from 'react-icons/md';
-import { IoChevronForward } from 'react-icons/io5';
+import { IoChevronForward, IoNotificationsOutline } from 'react-icons/io5';
+import NotificationModal from '../../components/NotificationModal';
 
-const Dashboard = () => {
+const UrologistDashboard = () => {
   // State for tracking checked tasks
   const [checkedTasks, setCheckedTasks] = useState(new Set());
+  // State for tracking active tab
+  const [activeTab, setActiveTab] = useState('appointments');
+  // State for notification modal
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const appointments = [
     { time: '9:00 AM', patient: 'Ethan Carter', age: 58, status: 'Active', statusColor: 'green' },
@@ -39,6 +44,13 @@ const Dashboard = () => {
     { patient: 'Chloe Miller', outcome: 'Continue Active Surveillance' },
   ];
 
+  const recentPatients = [
+    { time: 'Yesterday', patient: 'Michael Rodriguez', age: 67, status: 'Follow-up', statusColor: 'blue' },
+    { time: '2 days ago', patient: 'Sarah Johnson', age: 34, status: 'Consultation', statusColor: 'purple' },
+    { time: '3 days ago', patient: 'Robert Chen', age: 49, status: 'Review', statusColor: 'green' },
+    { time: '5 days ago', patient: 'Jennifer Lee', age: 56, status: 'Discharge', statusColor: 'gray' },
+  ];
+
   const getStatusBadge = (status, color) => {
     const colorClasses = {
       green: 'bg-green-100 text-green-700',
@@ -46,6 +58,7 @@ const Dashboard = () => {
       purple: 'bg-purple-100 text-purple-700',
       gray: 'bg-gray-100 text-gray-700',
       red: 'bg-red-100 text-red-700',
+      blue: 'bg-blue-100 text-blue-700',
     };
     
     return (
@@ -62,18 +75,31 @@ const Dashboard = () => {
         {/* Header */}
         <div className="mb-6 lg:mb-8 flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
           <div className="pl-12 lg:pl-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Urologist Dashboard</h1>
             <p className="text-gray-500 text-sm mt-1">Welcome, Dr. Thompson</p>
           </div>
-          {/* Search Bar */}
-          <div className="w-full lg:w-96">
-            <div className="relative">
+          {/* Search Bar and Notification */}
+          <div className="w-full lg:w-96 flex items-center gap-3">
+            <div className="relative flex-1">
               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Quick Access to Patient Records"
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
               />
+            </div>
+            {/* Notification Icon */}
+            <div className="relative">
+              <button 
+                onClick={() => setIsNotificationOpen(true)}
+                className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <IoNotificationsOutline className="text-2xl" />
+                {/* Notification Badge */}
+                <span className="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  5
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -85,7 +111,32 @@ const Dashboard = () => {
             {/* Today's Appointments */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Today's Appointments</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Today's Appointments</h2>
+                  {/* Tabs */}
+                  <div className="flex bg-gray-100 rounded-lg p-1">
+                    <button
+                      onClick={() => setActiveTab('appointments')}
+                      className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                        activeTab === 'appointments'
+                          ? 'bg-teal-600 text-white'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Appointments
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('recentPatients')}
+                      className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                        activeTab === 'recentPatients'
+                          ? 'bg-teal-600 text-white'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Recent Patients
+                    </button>
+                  </div>
+                </div>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[640px]">
@@ -98,25 +149,42 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {appointments.map((appointment, index) => (
-                      <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{appointment.time}</td>
-                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-900 text-xs sm:text-sm font-medium">
-                          <div className="flex items-center space-x-2">
-                            <span>{appointment.patient}</span>
-                            {appointment.tag && (
-                              <span className="bg-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded font-medium">
-                                {appointment.tag}
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{appointment.age}</td>
-                        <td className="py-3 sm:py-4 px-3 sm:px-6">
-                          {getStatusBadge(appointment.status, appointment.statusColor)}
-                        </td>
-                      </tr>
-                    ))}
+                    {activeTab === 'appointments' ? (
+                      appointments.map((appointment, index) => (
+                        <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                          <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{appointment.time}</td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-900 text-xs sm:text-sm font-medium">
+                            <div className="flex items-center space-x-2">
+                              <span>{appointment.patient}</span>
+                              {appointment.tag && (
+                                <span className="bg-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded font-medium">
+                                  {appointment.tag}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{appointment.age}</td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6">
+                            {getStatusBadge(appointment.status, appointment.statusColor)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      recentPatients.map((patient, index) => (
+                        <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                          <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{patient.time}</td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-900 text-xs sm:text-sm font-medium">
+                            <div className="flex items-center space-x-2">
+                              <span>{patient.patient}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{patient.age}</td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6">
+                            {getStatusBadge(patient.status, patient.statusColor)}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -183,8 +251,8 @@ const Dashboard = () => {
               <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="text-base sm:text-lg font-semibold text-gray-900">Pending Tasks</h2>
-                  <button className="bg-teal-600 text-white px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-teal-700 transition-colors flex items-center whitespace-nowrap">
-                    <span className="mr-1">+</span> <span className="hidden sm:inline">New Task</span><span className="sm:hidden">New</span>
+                  <button className="bg-teal-600 text-white w-8 h-8 rounded-full hover:bg-teal-700 transition-colors flex items-center justify-center">
+                    <span className="text-lg font-medium">+</span>
                   </button>
                 </div>
               </div>
@@ -242,8 +310,15 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Notification Modal */}
+      <NotificationModal 
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+      />
     </div>
   );
 };
 
-export default Dashboard;
+export default UrologistDashboard;
+

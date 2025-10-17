@@ -1,22 +1,20 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HiHome } from 'react-icons/hi';
-import { FaUsers, FaCalendarAlt, FaTasks, FaChartBar } from 'react-icons/fa';
+import { FaUsers, FaPaperPlane, FaClipboardCheck } from 'react-icons/fa';
 import { IoLogOutOutline } from 'react-icons/io5';
 
-const Sidebar = ({ isOpen, onClose }) => {
+const GPSidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
 
   const navigationItems = [
-    { name: 'Dashboard', icon: HiHome, path: '/dashboard', active: location.pathname === '/dashboard' },
-    { name: 'Patients', icon: FaUsers, path: '', active: location.pathname === '/patients' },
-    { name: 'Appointments', icon: FaCalendarAlt, path: '', active: location.pathname === '/appointments' },
-    { name: 'Tasks', icon: FaTasks, path: '', active: location.pathname === '/tasks' },
-    { name: 'Reports', icon: FaChartBar, path: '', active: location.pathname === '/reports' },
+    { name: 'Dashboard', icon: HiHome, path: '/gp/dashboard', active: location.pathname === '/gp/dashboard' || location.pathname === '/gp' },
+    { name: 'Patients', icon: FaUsers, path: '/gp/patients', active: location.pathname === '/gp/patients' },
+    { name: 'New Referral', icon: FaPaperPlane, path: '/gp/referral', active: location.pathname === '/gp/referral' },
+    { name: 'Referral Status', icon: FaClipboardCheck, path: '/gp/status', active: location.pathname === '/gp/status' },
   ];
 
   const handleLinkClick = () => {
-    // Close sidebar on mobile when a link is clicked
     if (onClose) {
       onClose();
     }
@@ -36,6 +34,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
           <span className="text-2xl font-bold text-gray-800">UroPrep</span>
         </div>
+        <div className="mt-2 text-xs text-gray-500">GP Panel</div>
       </div>
 
       {/* Navigation Menu */}
@@ -65,13 +64,8 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Bottom Section */}
       <div className="p-4 space-y-4">
-        <button className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center">
-          <span className="text-xl mr-2">+</span>
-          New Patient
-        </button>
-        
         <Link
-          to="/logout"
+          to="/login"
           className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
         >
           <IoLogOutOutline className="text-xl mr-3" />
@@ -87,4 +81,5 @@ const Sidebar = ({ isOpen, onClose }) => {
   );
 };
 
-export default Sidebar;
+export default GPSidebar;
+
