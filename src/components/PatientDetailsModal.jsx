@@ -8,7 +8,21 @@ import { SiTicktick } from 'react-icons/si';
 
 const PatientDetailsModal = ({ isOpen, onClose, patient }) => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [checkedTasks, setCheckedTasks] = useState(new Set([3]));
+  
+  // Initialize checked tasks based on patient data
+  const getInitialCheckedTasks = () => {
+    if (!patient?.tasks) return new Set();
+    return new Set(patient.tasks.filter(task => task.completed).map(task => task.id));
+  };
+  
+  const [checkedTasks, setCheckedTasks] = useState(getInitialCheckedTasks());
+
+  // Update checked tasks when patient changes
+  React.useEffect(() => {
+    if (patient?.tasks) {
+      setCheckedTasks(getInitialCheckedTasks());
+    }
+  }, [patient?.id]);
 
   if (!isOpen || !patient) return null;
 
@@ -24,29 +38,8 @@ const PatientDetailsModal = ({ isOpen, onClose, patient }) => {
     });
   };
 
-  const tasks = [
-    { id: 1, text: 'Review latest blood results' },
-    { id: 2, text: "Follow up on patient's call regarding medication side effects" },
-    { id: 3, text: 'Prepare referral letter to Dr. Smith' }
-  ];
-
-  const recentNotes = [
-    {
-      title: 'Post-Op Check',
-      date: '2024-09-10',
-      content: 'Patient recovering well from the procedure. Vitals are stable. Minimal pain reported. Incision site clean and dry.'
-    },
-    {
-      title: 'Follow-up appointment',
-      date: '2024-08-15',
-      content: 'Discussed PSA results. Patient remains asymptomatic. Continue active monitoring.'
-    },
-    {
-      title: 'Initial Consultation',
-      date: '2024-07-20',
-      content: 'Patient presented with urinary symptoms. Examination and initial PSA ordered.'
-    }
-  ];
+  const tasks = patient.tasks || [];
+  const recentNotes = patient.recentNotes || [];
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -71,21 +64,21 @@ const PatientDetailsModal = ({ isOpen, onClose, patient }) => {
                 <div className="flex items-start space-x-20 h-full">
                   <div className="flex-1">
                     <h1 className="text-3xl font-semibold text-gray-900">{patient.name}</h1>
-                    <p className="text-gray-600 mt-1">62, Male</p>
+                    <p className="text-gray-600 mt-1">{patient.age}, {patient.gender}</p>
                   </div>
                   <div className="border-l border-gray-200 pl-8 h-full flex flex-col justify-center">
                     <p className="text-gray-500 text-xs uppercase tracking-wide mb-1">PATIENT ID / MRN</p>
-                    <p className="text-gray-900 font-semibold text-lg">UP-12345</p>
+                    <p className="text-gray-900 font-semibold text-lg">{patient.patientId} / {patient.mrn}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-gray-900 font-medium mb-1">
-                    Last Appt: <span className="font-normal text-gray-700">2024-09-10</span>
+                    Last Appt: <span className="font-normal text-gray-700">{patient.lastAppointment}</span>
                   </p>
                   <p className="text-gray-900 font-medium mb-2">
-                    Phone: <span className="font-normal text-gray-700">(555) 123-4567</span>
+                    Phone: <span className="font-normal text-gray-700">{patient.phone}</span>
                   </p>
-                  <p className="text-gray-500 text-sm">ethan.carter@example.com</p>
+                  <p className="text-gray-500 text-sm">{patient.email}</p>
                 </div>
               </div>
             </div>
@@ -120,25 +113,31 @@ const PatientDetailsModal = ({ isOpen, onClose, patient }) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column - 2/3 width */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Active Monitoring Card */}
+              {/* Pathway/Monitoring Card */}
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xl font-semibold text-teal-600">Active Monitoring</h3>
-                  <span className="bg-green-50 text-green-600 px-3 py-1 rounded-md text-xs font-semibold">
-                    On Track
+                  <h3 className="text-xl font-semibold text-teal-600">{patient.pathway?.type || 'Pathway'}</h3>
+                  <span className={`px-3 py-1 rounded-md text-xs font-semibold ${
+                    patient.pathway?.status === 'On Track' || patient.pathway?.status === 'Active' 
+                      ? 'bg-green-50 text-green-600' 
+                      : patient.pathway?.status === 'Completed' || patient.pathway?.status === 'Discharged'
+                      ? 'bg-gray-100 text-gray-600'
+                      : 'bg-yellow-50 text-yellow-600'
+                  }`}>
+                    {patient.pathway?.status || 'Unknown'}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mb-6">Next: Follow-up PSA due 2024-10-15</p>
+                <p className="text-sm text-gray-600 mb-6">Next: {patient.pathway?.nextAction || 'No scheduled actions'}</p>
                 <div className="grid grid-cols-2 gap-8">
                   <div>
                     <p className="text-xs text-gray-500 font-medium mb-2">Latest PSA</p>
-                    <div className="text-3xl font-semibold text-gray-900 mb-1">4.5 ng/mL</div>
-                    <div className="text-xs text-gray-400">2024-07-15</div>
+                    <div className="text-3xl font-semibold text-gray-900 mb-1">{patient.vitals?.latestPSA || '-'}</div>
+                    <div className="text-xs text-gray-400">{patient.vitals?.psaDate || '-'}</div>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 font-medium mb-2">Prostate Volume</p>
-                    <div className="text-3xl font-semibold text-gray-900 mb-1">45 mL</div>
-                    <div className="text-xs text-gray-400">2024-08-05</div>
+                    <div className="text-3xl font-semibold text-gray-900 mb-1">{patient.vitals?.prostateVolume || '-'}</div>
+                    <div className="text-xs text-gray-400">{patient.vitals?.volumeDate || '-'}</div>
                   </div>
                 </div>
               </div>
@@ -187,7 +186,7 @@ const PatientDetailsModal = ({ isOpen, onClose, patient }) => {
 
               {/* Pending Tasks Card */}
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending tasks for Ethan</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending tasks for {patient.name?.split(' ')[0]}</h3>
                 <div className="space-y-3 mb-4">
                   {tasks.map((task) => (
                     <div key={task.id} className="flex items-start space-x-3 py-1">

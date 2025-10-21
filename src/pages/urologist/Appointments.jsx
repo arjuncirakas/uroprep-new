@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import NotificationModal from '../../components/NotificationModal';
+import Calendar from '../../components/Calendar';
 
 const Appointments = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -40,6 +41,11 @@ const Appointments = () => {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Calendar Section */}
+        <div className="mt-6">
+          <Calendar />
         </div>
       </div>
 

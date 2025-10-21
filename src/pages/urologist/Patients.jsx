@@ -3,58 +3,13 @@ import { FiSearch } from 'react-icons/fi';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import PatientDetailsModal from '../../components/PatientDetailsModal';
 import NotificationModal from '../../components/NotificationModal';
+import { getAllPatients } from '../../utils/dummyData';
 
 const Patients = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const patients = [
-    {
-      id: 1,
-      name: 'Ethan Carter',
-      patientId: '123456',
-      mrn: '789012',
-      pathwayStatus: 'Active',
-      statusColor: 'teal',
-      lastInteraction: '2024-03-15 10:30 AM'
-    },
-    {
-      id: 2,
-      name: 'Olivia Bennett',
-      patientId: '654321',
-      mrn: '210987',
-      pathwayStatus: 'Completed',
-      statusColor: 'gray',
-      lastInteraction: '2024-03-14 02:45 PM'
-    },
-    {
-      id: 3,
-      name: 'Noah Parker',
-      patientId: '987654',
-      mrn: '456789',
-      pathwayStatus: 'Pending',
-      statusColor: 'yellow',
-      lastInteraction: '2024-03-13 09:15 AM'
-    },
-    {
-      id: 4,
-      name: 'Ava Reynolds',
-      patientId: '456123',
-      mrn: '321654',
-      pathwayStatus: 'Active',
-      statusColor: 'teal',
-      lastInteraction: '2024-03-12 04:00 PM'
-    },
-    {
-      id: 5,
-      name: 'Liam Foster',
-      patientId: '321987',
-      mrn: '654789',
-      pathwayStatus: 'Completed',
-      statusColor: 'gray',
-      lastInteraction: '2024-03-11 11:20 AM'
-    }
-  ];
+  const patients = getAllPatients();
 
   const handleViewPatient = (patient) => {
     setSelectedPatient(patient);
