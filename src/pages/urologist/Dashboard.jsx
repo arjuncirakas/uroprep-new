@@ -3,6 +3,8 @@ import { FiSearch } from 'react-icons/fi';
 import { MdCheckBoxOutlineBlank, MdCheckBox } from 'react-icons/md';
 import { IoChevronForward, IoNotificationsOutline } from 'react-icons/io5';
 import NotificationModal from '../../components/NotificationModal';
+import AddScheduleModal from '../../components/AddScheduleModal';
+import PatientsDueForReviewModal from '../../components/PatientsDueForReviewModal';
 
 const UrologistDashboard = () => {
   // State for tracking checked tasks
@@ -11,6 +13,10 @@ const UrologistDashboard = () => {
   const [activeTab, setActiveTab] = useState('appointments');
   // State for notification modal
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  // State for add schedule modal
+  const [isAddScheduleOpen, setIsAddScheduleOpen] = useState(false);
+  // State for patients due for review modal
+  const [isPatientsReviewOpen, setIsPatientsReviewOpen] = useState(false);
 
   const appointments = [
     { time: '9:00 AM', patient: 'Ethan Carter', age: 58, status: 'Active', statusColor: 'green' },
@@ -20,11 +26,11 @@ const UrologistDashboard = () => {
     { time: '4:00 PM', patient: 'Liam Green', age: 55, status: 'Urgent', statusColor: 'red' },
   ];
 
-  const tasks = [
+  const [tasks, setTasks] = useState([
     { id: 1, text: 'Review lab results for Ethan Carter', due: 'Today' },
     { id: 2, text: 'Schedule follow-up for Olivia Bennett', due: 'Tomorrow' },
     { id: 3, text: "Prepare report for Noah Davis's procedure", due: '3 days' },
-  ];
+  ]);
 
   // Function to toggle task completion
   const toggleTask = (taskId) => {
@@ -37,6 +43,11 @@ const UrologistDashboard = () => {
       }
       return newChecked;
     });
+  };
+
+  // Function to add new task
+  const handleAddTask = (newTask) => {
+    setTasks(prev => [...prev, newTask]);
   };
 
   const mdtOutcomes = [
@@ -112,7 +123,9 @@ const UrologistDashboard = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Today's Appointments</h2>
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+                    {activeTab === 'appointments' ? "Today's Appointments" : "Recent Patients"}
+                  </h2>
                   {/* Tabs */}
                   <div className="flex bg-gray-100 rounded-lg p-1">
                     <button
@@ -195,10 +208,21 @@ const UrologistDashboard = () => {
               {/* Patients Due for Review */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Patients Due for Review</h2>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">Patients Due for Review</h2>
+                    <button
+                      onClick={() => setIsPatientsReviewOpen(true)}
+                      className="px-3 py-1 text-sm font-medium text-teal-600 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-100 transition-colors"
+                    >
+                      View All
+                    </button>
+                  </div>
                 </div>
                 <div className="p-4">
-                  <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
+                  <div 
+                    className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => setIsPatientsReviewOpen(true)}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <h3 className="text-sm font-medium text-gray-600 mb-2">Next 7-14 Days</h3>
@@ -251,7 +275,10 @@ const UrologistDashboard = () => {
               <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="text-base sm:text-lg font-semibold text-gray-900">Pending Tasks</h2>
-                  <button className="bg-teal-600 text-white w-8 h-8 rounded-full hover:bg-teal-700 transition-colors flex items-center justify-center">
+                  <button 
+                    onClick={() => setIsAddScheduleOpen(true)}
+                    className="bg-teal-600 text-white w-8 h-8 rounded-full hover:bg-teal-700 transition-colors flex items-center justify-center"
+                  >
                     <span className="text-lg font-medium">+</span>
                   </button>
                 </div>
@@ -315,6 +342,19 @@ const UrologistDashboard = () => {
       <NotificationModal 
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}
+      />
+
+      {/* Add Schedule Modal */}
+      <AddScheduleModal 
+        isOpen={isAddScheduleOpen}
+        onClose={() => setIsAddScheduleOpen(false)}
+        onAddTask={handleAddTask}
+      />
+
+      {/* Patients Due for Review Modal */}
+      <PatientsDueForReviewModal 
+        isOpen={isPatientsReviewOpen}
+        onClose={() => setIsPatientsReviewOpen(false)}
       />
     </div>
   );

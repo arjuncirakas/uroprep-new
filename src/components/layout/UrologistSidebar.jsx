@@ -4,7 +4,7 @@ import { HiHome } from 'react-icons/hi';
 import { FaUsers, FaCalendarAlt, FaTasks, FaChartBar } from 'react-icons/fa';
 import { IoLogOutOutline } from 'react-icons/io5';
 
-const UrologistSidebar = ({ isOpen, onClose }) => {
+const UrologistSidebar = ({ isOpen, onClose, onOpenAddPatient }) => {
   const location = useLocation();
 
   const navigationItems = [
@@ -20,6 +20,7 @@ const UrologistSidebar = ({ isOpen, onClose }) => {
       onClose();
     }
   };
+
 
   return (
     <div className={`
@@ -65,7 +66,10 @@ const UrologistSidebar = ({ isOpen, onClose }) => {
 
       {/* Bottom Section */}
       <div className="p-4 space-y-4">
-        <button className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center">
+        <button 
+          onClick={onOpenAddPatient}
+          className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center"
+        >
           <span className="text-xl mr-2">+</span>
           New Patient
         </button>

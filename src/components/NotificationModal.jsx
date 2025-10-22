@@ -120,9 +120,10 @@ const NotificationModal = ({ isOpen, onClose }) => {
       />
       
       {/* Modal */}
-      <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col">
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg shadow-2xl flex flex-col w-full max-w-2xl max-h-[80vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4">
+        <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4 rounded-t-lg">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-3">
               <IoNotificationsOutline className="text-white text-2xl" />
@@ -225,10 +226,11 @@ const NotificationModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+        <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 rounded-b-lg">
           <button className="w-full text-center text-sm text-teal-600 hover:text-teal-700 font-medium transition-colors">
             View All Notifications
           </button>
+        </div>
         </div>
       </div>
     </div>
