@@ -12,10 +12,13 @@ export const patientsData = [
     email: 'ethan.carter@example.com',
     pathwayStatus: 'Active',
     statusColor: 'teal',
+    priority: 'High',
+    priorityColor: 'red',
     lastInteraction: '2024-03-15 10:30 AM',
     lastAppointment: '2024-09-10',
+    category: 'surgery-pathway',
     pathway: {
-      type: 'Active Monitoring',
+      type: 'Surgical',
       status: 'On Track',
       nextAction: 'Follow-up PSA due 2024-10-15',
     },
@@ -59,10 +62,13 @@ export const patientsData = [
     email: 'olivia.bennett@example.com',
     pathwayStatus: 'Completed',
     statusColor: 'gray',
+    priority: 'Low',
+    priorityColor: 'green',
     lastInteraction: '2024-03-14 02:45 PM',
     lastAppointment: '2024-09-05',
+    category: 'post-op-followup',
     pathway: {
-      type: 'Post-Treatment Follow-up',
+      type: 'Postop Followup',
       status: 'Completed',
       nextAction: 'Annual check-up scheduled for 2025-01-15',
     },
@@ -105,10 +111,13 @@ export const patientsData = [
     email: 'noah.parker@example.com',
     pathwayStatus: 'Pending',
     statusColor: 'yellow',
+    priority: 'Urgent',
+    priorityColor: 'purple',
     lastInteraction: '2024-03-13 09:15 AM',
     lastAppointment: '2024-08-25',
+    category: 'new',
     pathway: {
-      type: 'Diagnostic Pathway',
+      type: 'Investigation',
       status: 'Awaiting Results',
       nextAction: 'Biopsy results expected by 2024-10-20',
     },
@@ -152,10 +161,13 @@ export const patientsData = [
     email: 'ava.reynolds@example.com',
     pathwayStatus: 'Active',
     statusColor: 'teal',
+    priority: 'Medium',
+    priorityColor: 'yellow',
     lastInteraction: '2024-03-12 04:00 PM',
     lastAppointment: '2024-09-08',
+    category: 'new',
     pathway: {
-      type: 'Bladder Cancer Surveillance',
+      type: 'Investigation',
       status: 'Active',
       nextAction: 'Cystoscopy scheduled for 2024-11-01',
     },
@@ -199,10 +211,13 @@ export const patientsData = [
     email: 'liam.foster@example.com',
     pathwayStatus: 'Completed',
     statusColor: 'gray',
+    priority: 'Medium',
+    priorityColor: 'yellow',
     lastInteraction: '2024-03-11 11:20 AM',
     lastAppointment: '2024-08-30',
+    category: 'post-op-followup',
     pathway: {
-      type: 'Post-Surgical Recovery',
+      type: 'Postop Followup',
       status: 'Discharged',
       nextAction: '6-month post-op review scheduled for 2025-02-28',
     },
@@ -244,6 +259,14 @@ export const getPatientById = (id) => {
 // Helper function to get all patients
 export const getAllPatients = () => {
   return patientsData;
+};
+
+// Helper function to get patients by category
+export const getPatientsByCategory = (category) => {
+  if (!category || category === 'all') {
+    return patientsData;
+  }
+  return patientsData.filter(patient => patient.category === category);
 };
 
 // Dummy appointment data
@@ -736,5 +759,139 @@ export const updateAppointmentDate = (appointmentId, newDate, newTime) => {
     return appointmentsData[appointmentIndex];
   }
   return null;
+};
+
+// MDT Schedule Data
+export const mdtScheduleData = [
+  {
+    id: 1,
+    date: '2025-10-22',
+    time: '13:00',
+    department: 'Urology',
+    location: 'Conference Room A',
+    patientId: 1,
+    patientName: 'Ethan Carter',
+    attendees: [
+      { name: 'Dr. Noah Davis', initials: 'ND', color: 'teal', role: 'Urologist' },
+      { name: 'Dr. Chloe Miller', initials: 'CM', color: 'green', role: 'Oncologist' },
+      { name: 'Dr. John Peterson', initials: 'JP', color: 'yellow', role: 'Radiologist' },
+      { name: 'Dr. Sarah Williams', initials: 'SW', color: 'blue', role: 'Pathologist' },
+      { name: 'Dr. Michael Brown', initials: 'MB', color: 'purple', role: 'Medical Oncologist' }
+    ],
+    status: 'upcoming',
+    chair: 'Dr. Thompson',
+    caseType: 'Prostate Cancer - Treatment Planning'
+  },
+  {
+    id: 2,
+    date: '2025-10-24',
+    time: '14:00',
+    department: 'Urology',
+    location: 'Conference Room B',
+    patientId: 3,
+    patientName: 'Noah Parker',
+    attendees: [
+      { name: 'Dr. Emma Davis', initials: 'ED', color: 'pink', role: 'Urologist' },
+      { name: 'Dr. Robert Chen', initials: 'RC', color: 'indigo', role: 'Oncologist' },
+      { name: 'Dr. Lisa Anderson', initials: 'LA', color: 'orange', role: 'Radiologist' }
+    ],
+    status: 'upcoming',
+    chair: 'Dr. Chen',
+    caseType: 'Prostate Cancer - Biopsy Results Review'
+  },
+  {
+    id: 3,
+    date: '2025-10-25',
+    time: '10:00',
+    department: 'Urology',
+    location: 'Virtual Meeting',
+    patientId: 4,
+    patientName: 'Ava Reynolds',
+    attendees: [
+      { name: 'Dr. Noah Davis', initials: 'ND', color: 'teal', role: 'Urologist' },
+      { name: 'Dr. Tom Harrison', initials: 'TH', color: 'red', role: 'Oncologist' },
+      { name: 'Dr. Anna Smith', initials: 'AS', color: 'green', role: 'Radiologist' }
+    ],
+    status: 'upcoming',
+    chair: 'Dr. Harrison',
+    caseType: 'Bladder Cancer - Surveillance Review'
+  },
+  {
+    id: 4,
+    date: '2025-10-29',
+    time: '13:00',
+    department: 'Urology',
+    location: 'Conference Room A',
+    patientId: 2,
+    patientName: 'Olivia Bennett',
+    attendees: [
+      { name: 'Dr. Noah Davis', initials: 'ND', color: 'teal', role: 'Urologist' },
+      { name: 'Dr. Chloe Miller', initials: 'CM', color: 'green', role: 'Oncologist' },
+      { name: 'Dr. John Peterson', initials: 'JP', color: 'yellow', role: 'Radiologist' },
+      { name: 'Dr. David Lee', initials: 'DL', color: 'blue', role: 'Pathologist' }
+    ],
+    status: 'upcoming',
+    chair: 'Dr. Thompson',
+    caseType: 'Prostate Cancer - Post-Treatment Follow-up'
+  },
+  {
+    id: 5,
+    date: '2025-10-15',
+    time: '13:00',
+    department: 'Urology',
+    location: 'Conference Room A',
+    patientId: 5,
+    patientName: 'Liam Foster',
+    attendees: [
+      { name: 'Dr. Noah Davis', initials: 'ND', color: 'teal', role: 'Urologist' },
+      { name: 'Dr. Chloe Miller', initials: 'CM', color: 'green', role: 'Oncologist' },
+      { name: 'Dr. John Peterson', initials: 'JP', color: 'yellow', role: 'Radiologist' }
+    ],
+    status: 'completed',
+    chair: 'Dr. Thompson',
+    caseType: 'Prostate Cancer - Post-Surgical Review',
+    outcome: 'Continue active surveillance, PSA monitoring every 3 months'
+  },
+  {
+    id: 6,
+    date: '2025-11-05',
+    time: '13:00',
+    department: 'Urology',
+    location: 'Conference Room A',
+    patientId: 1,
+    patientName: 'Ethan Carter',
+    attendees: [
+      { name: 'Dr. Noah Davis', initials: 'ND', color: 'teal', role: 'Urologist' },
+      { name: 'Dr. Chloe Miller', initials: 'CM', color: 'green', role: 'Oncologist' },
+      { name: 'Dr. John Peterson', initials: 'JP', color: 'yellow', role: 'Radiologist' },
+      { name: 'Dr. Sarah Williams', initials: 'SW', color: 'blue', role: 'Pathologist' }
+    ],
+    status: 'scheduled',
+    chair: 'Dr. Thompson',
+    caseType: 'Prostate Cancer - Treatment Response Review'
+  }
+];
+
+// Helper function to get MDT schedules by date range
+export const getMdtSchedulesByDateRange = (startDate, endDate) => {
+  return mdtScheduleData.filter(schedule => {
+    const scheduleDate = new Date(schedule.date);
+    return scheduleDate >= new Date(startDate) && scheduleDate <= new Date(endDate);
+  });
+};
+
+// Helper function to get upcoming MDT schedules
+export const getUpcomingMdtSchedules = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return mdtScheduleData.filter(schedule => {
+    const scheduleDate = new Date(schedule.date);
+    return scheduleDate >= today;
+  }).sort((a, b) => new Date(a.date) - new Date(b.date));
+};
+
+// Helper function to get MDT schedule by ID
+export const getMdtScheduleById = (id) => {
+  return mdtScheduleData.find(schedule => schedule.id === id);
 };
 

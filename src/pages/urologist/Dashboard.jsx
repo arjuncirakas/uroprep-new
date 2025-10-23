@@ -1,65 +1,132 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { FiSearch } from 'react-icons/fi';
-import { MdCheckBoxOutlineBlank, MdCheckBox } from 'react-icons/md';
 import { IoChevronForward, IoNotificationsOutline } from 'react-icons/io5';
+import { BsCalendar3 } from 'react-icons/bs';
 import NotificationModal from '../../components/NotificationModal';
-import AddScheduleModal from '../../components/AddScheduleModal';
 import PatientsDueForReviewModal from '../../components/PatientsDueForReviewModal';
+import PatientDetailsModalWrapper from '../../components/PatientDetailsModalWrapper';
+import MDTScheduleDetailsModal from '../../components/MDTScheduleDetailsModal';
+import MDTNotesModal from '../../components/MDTNotesModal';
+import { getUpcomingMdtSchedules } from '../../utils/dummyData';
 
 const UrologistDashboard = () => {
-  // State for tracking checked tasks
-  const [checkedTasks, setCheckedTasks] = useState(new Set());
   // State for tracking active tab
   const [activeTab, setActiveTab] = useState('appointments');
   // State for notification modal
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  // State for add schedule modal
-  const [isAddScheduleOpen, setIsAddScheduleOpen] = useState(false);
   // State for patients due for review modal
   const [isPatientsReviewOpen, setIsPatientsReviewOpen] = useState(false);
+  // Ref for patient details modal wrapper
+  const patientModalRef = useRef();
+  // State for MDT schedule view (day/week/month)
+  const [mdtView, setMdtView] = useState('week');
+  // State for MDT schedule details modal
+  const [isMdtDetailsOpen, setIsMdtDetailsOpen] = useState(false);
+  // State for selected MDT schedule
+  const [selectedMdtSchedule, setSelectedMdtSchedule] = useState(null);
+  // State for MDT notes modal
+  const [isMdtNotesOpen, setIsMdtNotesOpen] = useState(false);
+  // State for selected MDT outcome
+  const [selectedMdtOutcome, setSelectedMdtOutcome] = useState(null);
 
   const appointments = [
-    { time: '9:00 AM', patient: 'Ethan Carter', age: 58, status: 'Active', statusColor: 'green' },
-    { time: '10:30 AM', patient: 'Olivia Bennett', age: 42, status: 'Monitoring', statusColor: 'yellow' },
-    { time: '1:00 PM', patient: 'MDT Discussion', age: '-', status: 'Scheduled', statusColor: 'purple', tag: 'Urology' },
-    { time: '2:30 PM', patient: 'Ava Foster', age: 71, status: 'Discharged', statusColor: 'gray' },
-    { time: '4:00 PM', patient: 'Liam Green', age: 55, status: 'Urgent', statusColor: 'red' },
+    { time: '9:00 AM', patient: 'Ethan Carter', age: 58, status: 'Surgical', statusColor: 'blue' },
+    { time: '10:30 AM', patient: 'Olivia Bennett', age: 42, status: 'Postop Followup', statusColor: 'green' },
+    { time: '1:00 PM', patient: 'MDT Discussion', age: '-', status: 'Investigation', statusColor: 'purple', tag: 'Urology' },
+    { time: '2:30 PM', patient: 'Ava Reynolds', age: 67, status: 'Investigation', statusColor: 'purple' },
+    { time: '4:00 PM', patient: 'Liam Foster', age: 71, status: 'Surgical', statusColor: 'blue' },
   ];
 
-  const [tasks, setTasks] = useState([
-    { id: 1, text: 'Review lab results for Ethan Carter', due: 'Today' },
-    { id: 2, text: 'Schedule follow-up for Olivia Bennett', due: 'Tomorrow' },
-    { id: 3, text: "Prepare report for Noah Davis's procedure", due: '3 days' },
-  ]);
-
-  // Function to toggle task completion
-  const toggleTask = (taskId) => {
-    setCheckedTasks(prev => {
-      const newChecked = new Set(prev);
-      if (newChecked.has(taskId)) {
-        newChecked.delete(taskId);
-      } else {
-        newChecked.add(taskId);
-      }
-      return newChecked;
-    });
-  };
-
-  // Function to add new task
-  const handleAddTask = (newTask) => {
-    setTasks(prev => [...prev, newTask]);
-  };
 
   const mdtOutcomes = [
-    { patient: 'Noah Davis', outcome: 'Schedule for Biopsy' },
-    { patient: 'Chloe Miller', outcome: 'Continue Active Surveillance' },
+    { 
+      patient: 'Noah Davis', 
+      outcome: 'Schedule for Biopsy',
+      patientName: 'Noah Parker' // Match with actual patient name in patient data
+    },
+    { 
+      patient: 'Chloe Miller', 
+      outcome: 'Continue Active Surveillance',
+      patientName: 'Ava Reynolds' // Match with actual patient name in patient data
+    },
   ];
 
+  // Get MDT schedules based on selected view
+  const mdtSchedules = useMemo(() => {
+    const allSchedules = getUpcomingMdtSchedules();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (mdtView === 'day') {
+      // Show only today's schedules
+      return allSchedules.filter(schedule => {
+        const scheduleDate = new Date(schedule.date);
+        scheduleDate.setHours(0, 0, 0, 0);
+        return scheduleDate.getTime() === today.getTime();
+      });
+    } else if (mdtView === 'week') {
+      // Show next 7 days
+      const weekEnd = new Date(today);
+      weekEnd.setDate(weekEnd.getDate() + 7);
+      return allSchedules.filter(schedule => {
+        const scheduleDate = new Date(schedule.date);
+        return scheduleDate >= today && scheduleDate < weekEnd;
+      });
+    } else {
+      // Show next 30 days
+      const monthEnd = new Date(today);
+      monthEnd.setDate(monthEnd.getDate() + 30);
+      return allSchedules.filter(schedule => {
+        const scheduleDate = new Date(schedule.date);
+        return scheduleDate >= today && scheduleDate < monthEnd;
+      });
+    }
+  }, [mdtView]);
+
+  // Format date for display
+  const formatMdtDate = (dateString) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const scheduleDate = new Date(date);
+    scheduleDate.setHours(0, 0, 0, 0);
+    
+    if (scheduleDate.getTime() === today.getTime()) {
+      return 'Today';
+    }
+    
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (scheduleDate.getTime() === tomorrow.getTime()) {
+      return 'Tomorrow';
+    }
+    
+    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  // Get color classes for attendee avatars
+  const getAvatarColorClass = (color) => {
+    const colorMap = {
+      teal: 'bg-teal-100 text-teal-700',
+      green: 'bg-green-100 text-green-700',
+      yellow: 'bg-yellow-100 text-yellow-700',
+      blue: 'bg-blue-100 text-blue-700',
+      purple: 'bg-purple-100 text-purple-700',
+      pink: 'bg-pink-100 text-pink-700',
+      indigo: 'bg-indigo-100 text-indigo-700',
+      orange: 'bg-orange-100 text-orange-700',
+      red: 'bg-red-100 text-red-700',
+      gray: 'bg-gray-100 text-gray-700',
+    };
+    return colorMap[color] || 'bg-gray-100 text-gray-700';
+  };
+
   const recentPatients = [
-    { time: 'Yesterday', patient: 'Michael Rodriguez', age: 67, status: 'Follow-up', statusColor: 'blue' },
-    { time: '2 days ago', patient: 'Sarah Johnson', age: 34, status: 'Consultation', statusColor: 'purple' },
-    { time: '3 days ago', patient: 'Robert Chen', age: 49, status: 'Review', statusColor: 'green' },
-    { time: '5 days ago', patient: 'Jennifer Lee', age: 56, status: 'Discharge', statusColor: 'gray' },
+    { time: 'Yesterday', patient: 'Noah Parker', age: 55, status: 'Investigation', statusColor: 'purple' },
+    { time: '2 days ago', patient: 'Ethan Carter', age: 62, status: 'Surgical', statusColor: 'blue' },
+    { time: '3 days ago', patient: 'Olivia Bennett', age: 58, status: 'Postop Followup', statusColor: 'green' },
+    { time: '5 days ago', patient: 'Ava Reynolds', age: 67, status: 'Investigation', statusColor: 'purple' },
   ];
 
   const getStatusBadge = (status, color) => {
@@ -77,6 +144,18 @@ const UrologistDashboard = () => {
         {status}
       </span>
     );
+  };
+
+  // Function to open MDT schedule details modal
+  const openMdtScheduleDetails = (schedule) => {
+    setSelectedMdtSchedule(schedule);
+    setIsMdtDetailsOpen(true);
+  };
+
+  // Function to open MDT notes modal for MDT outcomes
+  const openMdtOutcomeDetails = (outcome) => {
+    setSelectedMdtOutcome(outcome);
+    setIsMdtNotesOpen(true);
   };
 
   return (
@@ -159,6 +238,7 @@ const UrologistDashboard = () => {
                       <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Patient Name</th>
                       <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Age</th>
                       <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Pathway Status</th>
+                      <th className="text-left py-3 px-3 sm:px-6 font-medium text-gray-600 text-xs sm:text-sm">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -180,6 +260,14 @@ const UrologistDashboard = () => {
                           <td className="py-3 sm:py-4 px-3 sm:px-6">
                             {getStatusBadge(appointment.status, appointment.statusColor)}
                           </td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6">
+                            <button
+                              onClick={() => patientModalRef.current?.openPatientDetails(appointment.patient)}
+                              className="px-3 py-1 bg-teal-600 text-white text-xs rounded-md hover:bg-teal-700 transition-colors"
+                            >
+                              View
+                            </button>
+                          </td>
                         </tr>
                       ))
                     ) : (
@@ -194,6 +282,14 @@ const UrologistDashboard = () => {
                           <td className="py-3 sm:py-4 px-3 sm:px-6 text-gray-700 text-xs sm:text-sm">{patient.age}</td>
                           <td className="py-3 sm:py-4 px-3 sm:px-6">
                             {getStatusBadge(patient.status, patient.statusColor)}
+                          </td>
+                          <td className="py-3 sm:py-4 px-3 sm:px-6">
+                            <button
+                              onClick={() => patientModalRef.current?.openPatientDetails(patient.patient)}
+                              className="px-3 py-1 bg-teal-600 text-white text-xs rounded-md hover:bg-teal-700 transition-colors"
+                            >
+                              View
+                            </button>
                           </td>
                         </tr>
                       ))
@@ -230,12 +326,16 @@ const UrologistDashboard = () => {
                         <div className="text-xs text-gray-500 mb-3">patients</div>
                         <div className="space-y-1 text-sm text-gray-700">
                           <div className="flex justify-between">
-                            <span>Post-Op Follow-up:</span>
+                            <span>Postop Followup:</span>
                             <span className="font-medium">5</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Surveillance:</span>
-                            <span className="font-medium">7</span>
+                            <span>Investigation:</span>
+                            <span className="font-medium">4</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Surgical:</span>
+                            <span className="font-medium">3</span>
                           </div>
                         </div>
                       </div>
@@ -254,10 +354,13 @@ const UrologistDashboard = () => {
                   {mdtOutcomes.map((outcome, index) => (
                     <div 
                       key={index} 
+                      onClick={() => openMdtOutcomeDetails(outcome)}
                       className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
                     >
                       <div>
-                        <div className="font-medium text-gray-900 text-sm">{outcome.patient}</div>
+                        <div className="font-medium text-gray-900 text-sm hover:text-teal-600 transition-colors">
+                          {outcome.patient}
+                        </div>
                         <div className="text-xs text-gray-500">Outcome: {outcome.outcome}</div>
                       </div>
                       <IoChevronForward className="text-gray-400 text-sm" />
@@ -270,43 +373,6 @@ const UrologistDashboard = () => {
 
           {/* Right Column - Takes 1/3 width */}
           <div className="lg:col-span-1 space-y-4 lg:space-y-6">
-            {/* Pending Tasks */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-base sm:text-lg font-semibold text-gray-900">Pending Tasks</h2>
-                  <button 
-                    onClick={() => setIsAddScheduleOpen(true)}
-                    className="bg-teal-600 text-white w-8 h-8 rounded-full hover:bg-teal-700 transition-colors flex items-center justify-center"
-                  >
-                    <span className="text-lg font-medium">+</span>
-                  </button>
-                </div>
-              </div>
-              <div className="p-4 sm:p-6 space-y-3">
-                {tasks.map((task) => (
-                  <div key={task.id} className="flex items-start space-x-3">
-                    <button
-                      onClick={() => toggleTask(task.id)}
-                      className="mt-0.5 flex-shrink-0 hover:opacity-80 transition-opacity"
-                    >
-                      {checkedTasks.has(task.id) ? (
-                        <MdCheckBox className="text-teal-600 text-lg" />
-                      ) : (
-                        <MdCheckBoxOutlineBlank className="text-gray-400 text-lg" />
-                      )}
-                    </button>
-                    <div className="flex-1">
-                      <div className={`text-sm font-medium ${checkedTasks.has(task.id) ? 'text-gray-500' : 'text-gray-900'}`}>
-                        {task.text}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">Due: {task.due}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* MDT Schedule */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
@@ -314,22 +380,130 @@ const UrologistDashboard = () => {
               </div>
               <div className="p-4 sm:p-6">
                 {/* Next MDT Discussion Card */}
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-2">Next MDT Discussion</h3>
-                  <div className="text-sm text-gray-600 mb-3">Today at 1:00 PM - Urology</div>
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center text-teal-700 text-xs font-bold">ND</div>
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-700 text-xs font-bold">CM</div>
-                    <div className="w-8 h-8 bg-yellow-200 rounded-full flex items-center justify-center text-yellow-800 text-xs font-bold">JP</div>
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-xs font-bold">+2</div>
+                {mdtSchedules.length > 0 && (
+                  <div 
+                    onClick={() => openMdtScheduleDetails(mdtSchedules[0])}
+                    className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg p-4 border border-teal-200 mb-4 cursor-pointer hover:shadow-lg hover:border-teal-300 transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-semibold text-gray-900 text-sm">Next MDT Discussion</h3>
+                      <BsCalendar3 className="text-teal-600" />
+                    </div>
+                    <div className="text-sm text-gray-700 font-medium mb-1">
+                      {formatMdtDate(mdtSchedules[0].date)} at {mdtSchedules[0].time}
+                    </div>
+                    <div className="text-xs text-gray-600 mb-3">
+                      {mdtSchedules[0].department} • {mdtSchedules[0].location}
+                    </div>
+                    <div className="flex items-center space-x-1 mb-2">
+                      {mdtSchedules[0].attendees.slice(0, 3).map((attendee, idx) => (
+                        <div 
+                          key={idx} 
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${getAvatarColorClass(attendee.color)}`}
+                        >
+                          {attendee.initials}
+                        </div>
+                      ))}
+                      {mdtSchedules[0].attendees.length > 3 && (
+                        <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-xs font-bold">
+                          +{mdtSchedules[0].attendees.length - 3}
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      {mdtSchedules[0].patientsCount} patients • Chair: {mdtSchedules[0].chair}
+                    </div>
                   </div>
-                </div>
+                )}
                 
                 {/* Day/Week/Month Toggle */}
-                <div className="flex space-x-2 border-b border-gray-200 pb-4">
-                  <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">Day</button>
-                  <button className="px-4 py-2 text-sm text-teal-600 font-medium border-b-2 border-teal-600">Week</button>
-                  <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">Month</button>
+                <div className="flex space-x-2 border-b border-gray-200 pb-3 mb-4">
+                  <button 
+                    onClick={() => setMdtView('day')}
+                    className={`px-4 py-2 text-sm transition-colors ${
+                      mdtView === 'day' 
+                        ? 'text-teal-600 font-medium border-b-2 border-teal-600' 
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Day
+                  </button>
+                  <button 
+                    onClick={() => setMdtView('week')}
+                    className={`px-4 py-2 text-sm transition-colors ${
+                      mdtView === 'week' 
+                        ? 'text-teal-600 font-medium border-b-2 border-teal-600' 
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Week
+                  </button>
+                  <button 
+                    onClick={() => setMdtView('month')}
+                    className={`px-4 py-2 text-sm transition-colors ${
+                      mdtView === 'month' 
+                        ? 'text-teal-600 font-medium border-b-2 border-teal-600' 
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Month
+                  </button>
+                </div>
+
+                {/* MDT Schedule List */}
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {mdtSchedules.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500 text-sm">
+                      No MDT schedules for this period
+                    </div>
+                  ) : (
+                    mdtSchedules.map((schedule) => (
+                      <div 
+                        key={schedule.id}
+                        onClick={() => openMdtScheduleDetails(schedule)}
+                        className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md hover:border-teal-300 transition-all cursor-pointer"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-sm font-semibold text-gray-900">
+                                {formatMdtDate(schedule.date)}
+                              </span>
+                              <span className="text-xs px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full font-medium">
+                                {schedule.department}
+                              </span>
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              {schedule.time} • {schedule.location}
+                            </div>
+                          </div>
+                          <IoChevronForward className="text-gray-400 text-sm flex-shrink-0" />
+                        </div>
+                        
+                        <div className="flex items-center justify-between mt-2">
+                          <div className="flex items-center space-x-1">
+                            {schedule.attendees.slice(0, 4).map((attendee, idx) => (
+                              <div 
+                                key={idx}
+                                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${getAvatarColorClass(attendee.color)}`}
+                                title={attendee.name}
+                              >
+                                {attendee.initials}
+                              </div>
+                            ))}
+                            {schedule.attendees.length > 4 && (
+                              <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 text-[10px] font-bold">
+                                +{schedule.attendees.length - 4}
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {schedule.patientsCount} patients
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -344,17 +518,29 @@ const UrologistDashboard = () => {
         onClose={() => setIsNotificationOpen(false)}
       />
 
-      {/* Add Schedule Modal */}
-      <AddScheduleModal 
-        isOpen={isAddScheduleOpen}
-        onClose={() => setIsAddScheduleOpen(false)}
-        onAddTask={handleAddTask}
-      />
 
       {/* Patients Due for Review Modal */}
       <PatientsDueForReviewModal 
         isOpen={isPatientsReviewOpen}
         onClose={() => setIsPatientsReviewOpen(false)}
+      />
+
+      {/* Patient Details Modal Wrapper */}
+      <PatientDetailsModalWrapper ref={patientModalRef} />
+
+      {/* MDT Schedule Details Modal */}
+      <MDTScheduleDetailsModal 
+        isOpen={isMdtDetailsOpen}
+        onClose={() => setIsMdtDetailsOpen(false)}
+        schedule={selectedMdtSchedule}
+      />
+
+      {/* MDT Notes Modal */}
+      <MDTNotesModal 
+        isOpen={isMdtNotesOpen}
+        onClose={() => setIsMdtNotesOpen(false)}
+        patientName={selectedMdtOutcome?.patientName}
+        outcome={selectedMdtOutcome?.outcome}
       />
     </div>
   );

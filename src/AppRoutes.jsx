@@ -13,8 +13,6 @@ import Login from './components/auth/Login';
 import UrologistDashboard from './pages/urologist/Dashboard';
 import Patients from './pages/urologist/Patients';
 import Appointments from './pages/urologist/Appointments';
-import Tasks from './pages/urologist/Tasks';
-import Reports from './pages/urologist/Reports';
 
 // GP Pages
 import GPDashboard from './pages/gp/Dashboard';
@@ -33,9 +31,10 @@ const AppRoutes = () => {
         <Route index element={<Navigate to="/urologist/dashboard" replace />} />
         <Route path="dashboard" element={<UrologistDashboard />} />
         <Route path="patients" element={<Patients />} />
+        <Route path="patients/new" element={<Patients />} />
+        <Route path="patients/surgery-pathway" element={<Patients />} />
+        <Route path="patients/post-op-followup" element={<Patients />} />
         <Route path="appointments" element={<Appointments />} />
-        <Route path="tasks" element={<Tasks />} />
-        <Route path="reports" element={<Reports />} />
       </Route>
 
       {/* GP Routes */}

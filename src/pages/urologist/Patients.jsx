@@ -1,36 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 import { IoNotificationsOutline } from 'react-icons/io5';
-import PatientDetailsModal from '../../components/PatientDetailsModal';
+import PatientDetailsModalWrapper from '../../components/PatientDetailsModalWrapper';
 import NotificationModal from '../../components/NotificationModal';
-import { getAllPatients } from '../../utils/dummyData';
+import { getPatientsByCategory } from '../../utils/dummyData';
 
 const Patients = () => {
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const location = useLocation();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const patients = getAllPatients();
+  const patientDetailsModalRef = useRef();
+
+  // Determine the category from the URL path
+  const category = useMemo(() => {
+    const path = location.pathname;
+    if (path.includes('/patients/new')) return 'new';
+    if (path.includes('/patients/surgery-pathway')) return 'surgery-pathway';
+    if (path.includes('/patients/post-op-followup')) return 'post-op-followup';
+    return 'all';
+  }, [location.pathname]);
+
+  // Get page title based on category
+  const pageTitle = useMemo(() => {
+    switch (category) {
+      case 'new':
+        return 'New Patients';
+      case 'surgery-pathway':
+        return 'Surgery Pathway';
+      case 'post-op-followup':
+        return 'Post-op Followup';
+      default:
+        return 'All Patients';
+    }
+  }, [category]);
+
+  // Get page subtitle based on category
+  const pageSubtitle = useMemo(() => {
+    switch (category) {
+      case 'new':
+        return 'Recently registered patients requiring initial assessment';
+      case 'surgery-pathway':
+        return 'Patients in active surgical pathway';
+      case 'post-op-followup':
+        return 'Patients requiring post-operative follow-up care';
+      default:
+        return 'Manage patient records and pathways';
+    }
+  }, [category]);
+
+  const patients = getPatientsByCategory(category);
 
   const handleViewPatient = (patient) => {
-    setSelectedPatient(patient);
-    setIsModalOpen(true);
+    patientDetailsModalRef.current?.openPatientDetails(patient.name);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedPatient(null);
-  };
-
-  const getStatusBadge = (status, color) => {
+  const getPriorityBadge = (priority, color) => {
     const colorClasses = {
-      teal: 'bg-teal-100 text-teal-700',
-      gray: 'bg-gray-100 text-gray-700',
+      red: 'bg-red-100 text-red-700',
+      purple: 'bg-purple-100 text-purple-700',
       yellow: 'bg-yellow-100 text-yellow-700',
+      green: 'bg-green-100 text-green-700',
     };
     
     return (
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${colorClasses[color]}`}>
-        {status}
+        {priority}
       </span>
     );
   };
@@ -42,8 +76,8 @@ const Patients = () => {
         {/* Header */}
         <div className="mb-6 lg:mb-8 flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
           <div className="pl-12 lg:pl-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Patients</h1>
-            <p className="text-gray-500 text-sm mt-1">Manage patient records and pathways</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{pageTitle}</h1>
+            <p className="text-gray-500 text-sm mt-1">{pageSubtitle}</p>
           </div>
           {/* Search Bar and Notification */}
           <div className="w-full lg:w-96 flex items-center gap-3">
@@ -79,7 +113,7 @@ const Patients = () => {
                 <tr className="border-b border-gray-200 bg-gray-50">
                   <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm">PATIENT NAME</th>
                   <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm">PATIENT ID / MRN</th>
-                  <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm">PATHWAY STATUS</th>
+                  <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm">PRIORITY</th>
                   <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm">LAST INTERACTION</th>
                   <th className="text-left py-4 px-6 font-semibold text-gray-700 text-sm">ACTION</th>
                 </tr>
@@ -96,7 +130,7 @@ const Patients = () => {
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      {getStatusBadge(patient.pathwayStatus, patient.statusColor)}
+                      {getPriorityBadge(patient.priority, patient.priorityColor)}
                     </td>
                     <td className="py-4 px-6">
                       <div className="text-sm text-gray-700">{patient.lastInteraction}</div>
@@ -104,7 +138,7 @@ const Patients = () => {
                     <td className="py-4 px-6">
                       <button 
                         onClick={() => handleViewPatient(patient)}
-                        className="text-teal-600 hover:text-teal-700 font-medium text-sm transition-colors cursor-pointer"
+                        className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors font-medium text-sm"
                       >
                         View
                       </button>
@@ -117,12 +151,8 @@ const Patients = () => {
         </div>
       </div>
 
-      {/* Patient Details Modal */}
-      <PatientDetailsModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        patient={selectedPatient}
-      />
+      {/* Patient Details Modal Wrapper */}
+      <PatientDetailsModalWrapper ref={patientDetailsModalRef} />
 
       {/* Notification Modal */}
       <NotificationModal 
