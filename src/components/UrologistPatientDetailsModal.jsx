@@ -1507,56 +1507,56 @@ const UrologistPatientDetailsModal = ({ isOpen, onClose, patient }) => {
                   {/* Active Monitoring */}
                   <button
                     onClick={() => handleTransfer('Active Monitoring')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <IoHeart className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <IoHeart className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Active Monitoring</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Active Monitoring</span>
                   </button>
 
                   {/* Surgery Pathway */}
                   <button
                     onClick={() => handleTransfer('Surgery Pathway')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <FaStethoscope className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <FaStethoscope className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Surgery Pathway</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Surgery Pathway</span>
                   </button>
 
                   {/* Medication */}
                   <button
                     onClick={() => handleTransfer('Medication')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <FaPills className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <FaPills className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Medication</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Medication</span>
                   </button>
 
                   {/* Radiotherapy */}
                   <button
                     onClick={() => handleTransfer('Radiotherapy')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <IoMedical className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <IoMedical className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Radiotherapy</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Radiotherapy</span>
                   </button>
 
                   {/* Discharge */}
                   <button
                     onClick={() => handleTransfer('Discharge')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <IoCheckmark className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <IoCheckmark className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Discharge</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Discharge</span>
                   </button>
                 </>
               )}
@@ -1567,45 +1567,45 @@ const UrologistPatientDetailsModal = ({ isOpen, onClose, patient }) => {
                   {/* Active Monitoring */}
                   <button
                     onClick={() => handleTransfer('Active Monitoring')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <IoHeart className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <IoHeart className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Active Monitoring</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Active Monitoring</span>
                   </button>
 
                   {/* Medication */}
                   <button
                     onClick={() => handleTransfer('Medication')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <FaPills className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <FaPills className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Medication</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Medication</span>
                   </button>
 
                   {/* Post-op Transfer */}
                   <button
                     onClick={() => handleTransfer('Post-op Transfer')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <FaStethoscope className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <FaStethoscope className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Post-op Transfer</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Post-op Transfer</span>
                   </button>
 
                   {/* Discharge */}
                   <button
                     onClick={() => handleTransfer('Discharge')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <IoCheckmark className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <IoCheckmark className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Discharge</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Discharge</span>
                   </button>
                 </>
               )}
@@ -1616,23 +1616,23 @@ const UrologistPatientDetailsModal = ({ isOpen, onClose, patient }) => {
                   {/* Medication */}
                   <button
                     onClick={() => handleTransfer('Medication')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <FaPills className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <FaPills className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Medication</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Medication</span>
                   </button>
 
                   {/* Discharge */}
                   <button
                     onClick={() => handleTransfer('Discharge')}
-                    className="flex flex-col items-center p-2 bg-white rounded-lg hover:bg-gray-50 transition-colors min-w-[100px] border border-gray-300"
+                    className="flex flex-col items-center p-3 bg-white rounded-md hover:bg-gray-50 transition-colors min-w-[110px] border border-gray-200"
                   >
-                    <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center mb-1">
-                      <IoCheckmark className="text-teal-600 text-xs" />
+                    <div className="w-8 h-8 bg-teal-50 rounded-md flex items-center justify-center mb-2">
+                      <IoCheckmark className="text-teal-600 text-sm" />
                     </div>
-                    <span className="text-xs font-medium text-gray-700">Discharge</span>
+                    <span className="text-xs font-medium text-gray-700 text-center leading-tight">Discharge</span>
                   </button>
                 </>
               )}
