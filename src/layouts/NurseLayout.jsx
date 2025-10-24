@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NurseSidebar from '../components/layout/NurseSidebar';
+import AddPatientModal from '../components/AddPatientModal';
 import { HiMenu, HiX } from 'react-icons/hi';
 
 const NurseLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isAddPatientOpen, setIsAddPatientOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleAddPatient = (newPatient) => {
+    console.log('New patient added:', newPatient);
+    // You can add additional logic here like updating a global state or making an API call
   };
 
   return (
@@ -28,11 +35,23 @@ const NurseLayout = () => {
         />
       )}
 
-      <NurseSidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      <NurseSidebar 
+        isOpen={isSidebarOpen} 
+        onClose={toggleSidebar}
+        onOpenAddPatient={() => setIsAddPatientOpen(true)}
+      />
       
       <main className="flex-1 flex flex-col w-full lg:w-auto overflow-hidden">
         <Outlet />
       </main>
+
+      {/* Add Patient Modal */}
+      <AddPatientModal 
+        isOpen={isAddPatientOpen}
+        onClose={() => setIsAddPatientOpen(false)}
+        onPatientAdded={handleAddPatient}
+        isUrologist={false}
+      />
     </div>
   );
 };

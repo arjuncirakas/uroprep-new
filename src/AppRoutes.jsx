@@ -18,7 +18,12 @@ import Appointments from './pages/urologist/Appointments';
 import GPDashboard from './pages/gp/Dashboard';
 
 // Nurse Pages
-import NurseDashboard from './pages/nurse/Dashboard';
+import OPDManagement from './pages/nurse/OPDManagement';
+import PatientList from './pages/nurse/PatientList';
+import NurseAppointments from './pages/nurse/Appointments';
+import ActiveMonitoring from './pages/nurse/ActiveMonitoring';
+import Surgery from './pages/nurse/Surgery';
+import PostOpFollowup from './pages/nurse/PostOpFollowup';
 
 const AppRoutes = () => {
   return (
@@ -46,16 +51,20 @@ const AppRoutes = () => {
 
       {/* Nurse Routes */}
       <Route path="/nurse" element={<NurseLayout />}>
-        <Route index element={<Navigate to="/nurse/dashboard" replace />} />
-        <Route path="dashboard" element={<NurseDashboard />} />
-        {/* Add more nurse routes here as needed */}
+        <Route index element={<Navigate to="/nurse/opd-management" replace />} />
+        <Route path="opd-management" element={<OPDManagement />} />
+        <Route path="patients" element={<PatientList />} />
+        <Route path="appointments" element={<NurseAppointments />} />
+        <Route path="monitoring" element={<ActiveMonitoring />} />
+        <Route path="surgery" element={<Surgery />} />
+        <Route path="followup" element={<PostOpFollowup />} />
       </Route>
 
-      {/* Default Route - Redirect to Urologist Dashboard */}
-      <Route path="/" element={<Navigate to="/urologist/dashboard" replace />} />
+      {/* Default Route - Redirect to Login */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
 
-      {/* Catch all - Redirect to Urologist Dashboard */}
-      <Route path="*" element={<Navigate to="/urologist/dashboard" replace />} />
+      {/* Catch all - Redirect to Login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };

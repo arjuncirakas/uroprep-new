@@ -4,27 +4,46 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'doctor@hospital.com',
+    password: 'password123',
     role: 'urologist'
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // For now, just navigate based on role selection
-    // In production, this would validate credentials first
-    switch (formData.role) {
-      case 'urologist':
-        navigate('/urologist/dashboard');
-        break;
-      case 'gp':
-        navigate('/gp/dashboard');
-        break;
-      case 'nurse':
-        navigate('/nurse/dashboard');
-        break;
-      default:
-        navigate('/urologist/dashboard');
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      // Basic validation
+      if (!formData.email || !formData.password) {
+        setError('Please fill in all fields');
+        return;
+      }
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Navigate based on role selection
+      switch (formData.role) {
+        case 'urologist':
+          navigate('/urologist/dashboard');
+          break;
+        case 'gp':
+          navigate('/gp/dashboard');
+          break;
+        case 'nurse':
+          navigate('/nurse/opd-management');
+          break;
+        default:
+          navigate('/urologist/dashboard');
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,6 +65,13 @@ const Login = () => {
           <h1 className="text-3xl font-bold text-gray-800">UroPrep</h1>
           <p className="text-gray-500 mt-2">Urology Patient Management System</p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -100,9 +126,10 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-lg hover:shadow-xl"
+            disabled={isLoading}
+            className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign In
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 

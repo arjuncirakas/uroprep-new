@@ -1,18 +1,19 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HiHome } from 'react-icons/hi';
-import { FaUsers, FaCalendarAlt, FaClipboardList, FaDatabase } from 'react-icons/fa';
+import { FaUsers, FaCalendarAlt, FaStethoscope, FaEdit, FaDatabase, FaHeartbeat, FaClipboardList } from 'react-icons/fa';
 import { IoLogOutOutline } from 'react-icons/io5';
 
-const NurseSidebar = ({ isOpen, onClose }) => {
+const NurseSidebar = ({ isOpen, onClose, onOpenAddPatient }) => {
   const location = useLocation();
 
   const navigationItems = [
-    { name: 'Dashboard', icon: HiHome, path: '/nurse/dashboard', active: location.pathname === '/nurse/dashboard' || location.pathname === '/nurse' },
-    { name: 'Patients', icon: FaUsers, path: '/nurse/patients', active: location.pathname === '/nurse/patients' },
+    { name: 'OPD Management', icon: FaDatabase, path: '/nurse/opd-management', active: location.pathname === '/nurse/opd-management' },
+    { name: 'Patient List', icon: FaUsers, path: '/nurse/patients', active: location.pathname === '/nurse/patients' },
     { name: 'Appointments', icon: FaCalendarAlt, path: '/nurse/appointments', active: location.pathname === '/nurse/appointments' },
-    { name: 'Referral Triage', icon: FaClipboardList, path: '/nurse/triage', active: location.pathname === '/nurse/triage' },
-    { name: 'Data Entry', icon: FaDatabase, path: '/nurse/data-entry', active: location.pathname === '/nurse/data-entry' },
+    { name: 'Active Monitoring', icon: FaHeartbeat, path: '/nurse/monitoring', active: location.pathname === '/nurse/monitoring' },
+    { name: 'Surgery', icon: FaStethoscope, path: '/nurse/surgery', active: location.pathname === '/nurse/surgery' },
+    { name: 'Post-Op Follow-up', icon: FaClipboardList, path: '/nurse/followup', active: location.pathname === '/nurse/followup' },
   ];
 
   const handleLinkClick = () => {
@@ -23,7 +24,7 @@ const NurseSidebar = ({ isOpen, onClose }) => {
 
   return (
     <div className={`
-      w-[250px] bg-white flex flex-col h-screen border-r border-gray-200
+      w-[280px] bg-white flex flex-col h-screen border-r border-gray-200
       fixed lg:static z-40 transition-transform duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
     `}>
@@ -65,9 +66,12 @@ const NurseSidebar = ({ isOpen, onClose }) => {
 
       {/* Bottom Section */}
       <div className="p-4 space-y-4">
-        <button className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center">
+        <button 
+          onClick={onOpenAddPatient}
+          className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center"
+        >
           <span className="text-xl mr-2">+</span>
-          New Appointment
+          New Patient
         </button>
         
         <Link
