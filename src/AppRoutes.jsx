@@ -16,6 +16,8 @@ import Appointments from './pages/urologist/Appointments';
 
 // GP Pages
 import GPDashboard from './pages/gp/Dashboard';
+import GPReferredPatients from './pages/gp/ReferredPatients';
+import GPActiveMonitoring from './pages/gp/ActiveMonitoring';
 
 // Nurse Pages
 import OPDManagement from './pages/nurse/OPDManagement';
@@ -46,7 +48,8 @@ const AppRoutes = () => {
       <Route path="/gp" element={<GPLayout />}>
         <Route index element={<Navigate to="/gp/dashboard" replace />} />
         <Route path="dashboard" element={<GPDashboard />} />
-        {/* Add more GP routes here as needed */}
+        <Route path="referred-patients" element={<GPReferredPatients />} />
+        <Route path="monitoring" element={<GPActiveMonitoring />} />
       </Route>
 
       {/* Nurse Routes */}

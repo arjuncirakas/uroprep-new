@@ -1,17 +1,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HiHome } from 'react-icons/hi';
-import { FaUsers, FaPaperPlane, FaClipboardCheck } from 'react-icons/fa';
+import { FaUsers, FaHeartbeat } from 'react-icons/fa';
 import { IoLogOutOutline } from 'react-icons/io5';
 
-const GPSidebar = ({ isOpen, onClose }) => {
+const GPSidebar = ({ isOpen, onClose, onOpenAddPatient }) => {
   const location = useLocation();
 
   const navigationItems = [
     { name: 'Dashboard', icon: HiHome, path: '/gp/dashboard', active: location.pathname === '/gp/dashboard' || location.pathname === '/gp' },
-    { name: 'Patients', icon: FaUsers, path: '/gp/patients', active: location.pathname === '/gp/patients' },
-    { name: 'New Referral', icon: FaPaperPlane, path: '/gp/referral', active: location.pathname === '/gp/referral' },
-    { name: 'Referral Status', icon: FaClipboardCheck, path: '/gp/status', active: location.pathname === '/gp/status' },
+    { name: 'Referred Patients', icon: FaUsers, path: '/gp/referred-patients', active: location.pathname === '/gp/referred-patients' },
+    { name: 'Active Monitoring', icon: FaHeartbeat, path: '/gp/monitoring', active: location.pathname === '/gp/monitoring' },
   ];
 
   const handleLinkClick = () => {
@@ -22,7 +21,7 @@ const GPSidebar = ({ isOpen, onClose }) => {
 
   return (
     <div className={`
-      w-[250px] bg-white flex flex-col h-screen border-r border-gray-200
+      w-[280px] bg-white flex flex-col h-screen border-r border-gray-200
       fixed lg:static z-40 transition-transform duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
     `}>
@@ -64,6 +63,14 @@ const GPSidebar = ({ isOpen, onClose }) => {
 
       {/* Bottom Section */}
       <div className="p-4 space-y-4">
+        <button 
+          onClick={onOpenAddPatient}
+          className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center"
+        >
+          <span className="text-xl mr-2">+</span>
+          New Patient
+        </button>
+        
         <Link
           to="/login"
           className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"

@@ -67,7 +67,7 @@ const RescheduleConfirmationModal = ({ isOpen, appointment, newDate, newTime, on
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-gray-200">
+      <div className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] border border-gray-200 flex flex-col">
         
         {/* Header */}
         <div className="bg-teal-600 px-6 py-5 flex items-center justify-between border-b border-teal-700">
@@ -89,7 +89,7 @@ const RescheduleConfirmationModal = ({ isOpen, appointment, newDate, newTime, on
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           
           {/* Patient Information */}
           <div className="bg-gray-50 border border-gray-200 rounded p-4">
@@ -246,8 +246,8 @@ const RescheduleConfirmationModal = ({ isOpen, appointment, newDate, newTime, on
           )}
         </div>
 
-        {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+        {/* Fixed Footer */}
+        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-between flex-shrink-0">
           <div className="text-sm text-gray-600">
             {selectedDate && selectedTime ? (
               <span className="flex items-center gap-2">

@@ -4,6 +4,7 @@ import { IoChevronForward } from 'react-icons/io5';
 import NursePatientDetailsModal from '../../components/NursePatientDetailsModal';
 import BookInvestigationModal from '../../components/BookInvestigationModal';
 import AddScheduleModal from '../../components/AddScheduleModal';
+import NoShowPatientModal from '../../components/NoShowPatientModal';
 import NurseHeader from '../../components/layout/NurseHeader';
 
 const OPDManagement = () => {
@@ -15,7 +16,9 @@ const OPDManagement = () => {
   const [isInvestigationModalOpen, setIsInvestigationModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [isPatientDetailsModalOpen, setIsPatientDetailsModalOpen] = useState(false);
+  const [isNoShowModalOpen, setIsNoShowModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedNoShowPatient, setSelectedNoShowPatient] = useState(null);
 
   // Sample patient data
   const patients = [
@@ -282,6 +285,23 @@ const OPDManagement = () => {
     setIsScheduleModalOpen(true);
   };
 
+  const handleNoShowClick = (patient) => {
+    setSelectedNoShowPatient(patient);
+    setIsNoShowModalOpen(true);
+  };
+
+  const handleNoShowReschedule = (patientId, rescheduleData) => {
+    console.log('Rescheduling no-show patient:', patientId, rescheduleData);
+    // In a real app, this would make an API call to reschedule
+    // For now, we'll just log it
+  };
+
+  const handleAddTimelineEntry = (patientId, entry) => {
+    console.log('Adding timeline entry for patient:', patientId, entry);
+    // In a real app, this would make an API call to save the timeline entry
+    // For now, we'll just log it
+  };
+
   return (
     <div className="h-full overflow-y-auto">
       {/* Main Content Area */}
@@ -430,7 +450,7 @@ const OPDManagement = () => {
                 <div className="p-4">
                   <div className="space-y-2">
                     {noShowPatients.filter(patient => patient.appointmentType === 'investigation').map((patient) => (
-                      <div key={patient.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                      <div key={patient.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors cursor-pointer" onClick={() => handleNoShowClick(patient)}>
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-semibold text-xs">
                             {getInitials(patient.name)}
@@ -443,7 +463,10 @@ const OPDManagement = () => {
                           </div>
                         </div>
                         <button
-                          onClick={() => handleViewEdit(patient)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleNoShowClick(patient);
+                          }}
                           className="text-teal-600 hover:text-teal-700"
                         >
                           <IoChevronForward className="w-4 h-4" />
@@ -462,7 +485,7 @@ const OPDManagement = () => {
                 <div className="p-4">
                   <div className="space-y-2">
                     {noShowPatients.filter(patient => patient.appointmentType === 'urologist').map((patient) => (
-                      <div key={patient.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                      <div key={patient.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors cursor-pointer" onClick={() => handleNoShowClick(patient)}>
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-semibold text-xs">
                             {getInitials(patient.name)}
@@ -475,7 +498,10 @@ const OPDManagement = () => {
                           </div>
                         </div>
                         <button
-                          onClick={() => handleViewEdit(patient)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleNoShowClick(patient);
+                          }}
                           className="text-teal-600 hover:text-teal-700"
                         >
                           <IoChevronForward className="w-4 h-4" />
@@ -635,6 +661,15 @@ const OPDManagement = () => {
         isOpen={isScheduleModalOpen}
         onClose={() => setIsScheduleModalOpen(false)}
         patient={selectedPatient}
+      />
+
+      {/* No Show Patient Modal */}
+      <NoShowPatientModal 
+        isOpen={isNoShowModalOpen}
+        onClose={() => setIsNoShowModalOpen(false)}
+        patient={selectedNoShowPatient}
+        onReschedule={handleNoShowReschedule}
+        onAddTimelineEntry={handleAddTimelineEntry}
       />
     </div>
   );
